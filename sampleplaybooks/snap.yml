@@ -1,0 +1,29 @@
+#!/usr/bin/env ansible-playbook
+- name: "Create a snapshot of a storage group"
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  vars:
+    input: &uni_connection_vars
+      array_id: "{{array_id}}"
+      password: "{{password}}"
+      unispherehost: "{{unispherehost}}"
+      universion: "{{universion}}"
+      user: "{{user}}"
+      verifycert: "{{verifycert}}"
+  tasks:
+  - name: Create SnapShot
+    dellemc_pmax_snap:
+        unispherehost: "{{unispherehost}}"
+        universion: "{{universion}}"
+        verifycert: "{{verifycert}}"
+        user: "{{user}}"
+        password: "{{password}}"
+        sgname: 'Ansible_SG'
+        array_id: '000197600156'
+        snapshotname: 'Ansible_SnapShot_1'
+        time_to_live_hrs: 1
+        action: "create"
+  - debug: var=snap_detail

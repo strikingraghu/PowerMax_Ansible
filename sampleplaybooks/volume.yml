@@ -1,0 +1,29 @@
+#!/usr/bin/env ansible-playbook
+- name: "Modify Volumes"
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  vars:
+    input: &uni_connection_vars
+      array_id: "{{array_id}}"
+      password: "{{password}}"
+      unispherehost: "{{unispherehost}}"
+      universion: "{{universion}}"
+      user: "{{user}}"
+      verifycert: "{{verifycert}}"
+  tasks:
+  - name: Modify Volume Sizes and Labels
+    dellemc_pmax_volume:
+        <<: *uni_connection_vars
+        sgname: 'Ansible_SG'
+        in_sg: "present"
+        volumes:
+          - device_id: "000BB"
+            cap_gb: 5
+            vol_name: "LABEL"
+          - device_id: "000BA"
+            cap_gb: 5
+            vol_name: "LABEL"
+  - debug: var=storagegroup_detail
